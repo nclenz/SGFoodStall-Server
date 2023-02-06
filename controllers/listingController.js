@@ -5,6 +5,7 @@ const listings = express.Router()
 const { body, param, validationResult } = require("express-validator")
 const multer = require("multer")
 const aws = require("aws-sdk")
+const checkAuth = require("../middleware/checkAuth")
 
 // temporary store uploaded file in buffer
 const storage = multer.memoryStorage()
@@ -51,7 +52,9 @@ listings.post("/upload", upload.single("image"), (req, res) => {
 
 listings.post(
   "/create",
+  checkAuth,
   upload.single("image"),
+
   asyncHandler(async (req, res) => {
     const newListing = req.body
 

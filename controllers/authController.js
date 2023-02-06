@@ -4,8 +4,8 @@ const auth = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("express-async-handler")
-// const loginLimiter = require("../middleware/LoginLimiter")
-// const checkAuth = require("../middleware/checkAuth")
+// const loginLimiter = require("../middleware/loginLimiter")
+const checkAuth = require("../middleware/checkAuth")
 
 auth.post(
   "/login",
@@ -40,6 +40,18 @@ auth.post(
       accessToken,
       id: foundUser._id,
       username: foundUser.username,
+    })
+  })
+)
+
+auth.get(
+  "/user",
+  checkAuth,
+  asyncHandler(async (req, res) => {
+    const user = await User.findOne({ username: req.username })
+    return res.status(200).json({
+      username: user.username,
+      id: user._id,
     })
   })
 )
