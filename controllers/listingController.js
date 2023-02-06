@@ -82,8 +82,10 @@ listings.post("/upload", upload.single("image"), (req, res) => {
 listings.post(
   "/create",
   upload.single("image"),
-  body("rental").isNumeric(),
+  // body("rental").isNumeric(),
   asyncHandler(async (req, res) => {
+    const newListing = req.body
+
     // return validation errors, if any
     const errors = validationResult(req)
     if (!errors.isEmpty()) {

@@ -7,6 +7,7 @@ const listingSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  image: { type: String, required: true },
   title: {
     type: String,
     required: true,
@@ -16,6 +17,10 @@ const listingSchema = new mongoose.Schema({
     type: String,
     required: true,
     min: 3,
+  },
+  condition: {
+    type: String,
+    enum: ["Bare", "Partial Furnish", "Fully Furnished"],
   },
   rental: {
     type: Number,
@@ -35,6 +40,7 @@ const listingSchema = new mongoose.Schema({
   ],
   desc: {
     type: String,
+    required: true,
   },
 })
 
