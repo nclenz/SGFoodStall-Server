@@ -3,7 +3,6 @@ const Listing = require("../models/listing")
 const asyncHandler = require("express-async-handler")
 const listings = express.Router()
 const { body, param, validationResult } = require("express-validator")
-const fileUpload = require("express-fileupload")
 const multer = require("multer")
 const aws = require("aws-sdk")
 
@@ -50,39 +49,9 @@ listings.post("/upload", upload.single("image"), (req, res) => {
   return res.status(200).send({ msg: "uploaded successfully" })
 })
 
-// listings.post("/upload", async (req, res) => {
-//   AWS.config.update({
-//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//     secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
-//     region: process.env.AWS_S3_BUCKET_REGION,
-//   })
-
-//   const s3 = new AWS.S3()
-
-//   const fileContent = Buffer.from(req.file.data, "binary")
-
-//   const params = {
-//     Bucket: process.env.AWS_BUCKET_NAME,
-//     Key: req.files.data.name,
-//     Body: fileContent,
-//   }
-
-//   s3.upload(params, (err, data) => {
-//     if (err) {
-//       throw err
-//     }
-//     res.send({
-//       response_code: 200,
-//       response_message: "Success",
-//       response_data: data,
-//     })
-//   })
-// })
-
 listings.post(
   "/create",
   upload.single("image"),
-  // body("rental").isNumeric(),
   asyncHandler(async (req, res) => {
     const newListing = req.body
 
@@ -120,44 +89,50 @@ listings.post(
   })
 )
 
-listings.get("/all", async (req, res) => {
-  try {
+listings.get(
+  "/all",
+  asyncHandler(async (req, res) => {
     const allListings = await Listing.find().exec()
     if (!allListings?.length) {
       res.status(400).json({ msg: "No listings found" })
     }
-    // console.log(Listing)
     res.status(200).json(allListings)
-  } catch (error) {
-    res.status(400).json({ error: error.message })
-  }
-  // res.send("Testing")
-})
+  })
+)
+
+listings.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const listing = await Listing.findById(id)
+    if (!listing) {
+      return res.status(404).json({ msg: "Listing Not Found" })
+    }
+    res.status(200).json(listing)
+  })
+)
 
 //UPDATE
 listings.put(
   "/edit/:id",
+  param("id").isMongoId(),
   asyncHandler(async (req, res) => {
     const { id } = req.params
-
     const { newListingsInput } = req.body
 
-    try {
-      const updatedListings = await Listing.findByIdAndUpdate(
-        id,
-        {
-          newListingsInput,
-        },
-        {
-          new: true,
-        }
-      ).exec()
-      if (updatedListings) {
-        res.status(200).json(updatedListings)
-      } else return res.status(404).json({ message: "Listing not found" })
-    } catch (error) {
-      res.status(400).json({ error: error.message })
-    }
+    const updatedListings = await Listing.findByIdAndUpdate(
+      id,
+      {
+        newListingsInput,
+      },
+      {
+        new: true,
+      }
+    ).exec()
+    if (updatedListings) {
+      res.status(200).json(updatedListings)
+    } else return res.status(404).json({ message: "Listing not found" })
   })
 )
 

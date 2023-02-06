@@ -9,15 +9,11 @@ const userValidation = require("../middleware/userValidation")
 users.get(
   "/all",
   asyncHandler(async (req, res) => {
-    try {
-      const users = await User.find().exec()
-      if (!users?.length) {
-        return res.status(400).json({ msg: "No users found" })
-      }
-      return res.json(users)
-    } catch (error) {
-      res.status(400).json({ error: error.message })
+    const users = await User.find().exec()
+    if (!users?.length) {
+      return res.status(400).json({ msg: "No users found" })
     }
+    return res.json(users)
   })
 )
 
@@ -27,18 +23,15 @@ users.post("/create", userValidation, async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors })
   }
-  try {
-    const { username, password } = req.body
-    //hash and salt
-    const hashedPwd = await bcrypt.hash(password, 10)
 
-    const newUser = await User.create({
-      username,
-      password: hashedPwd,
-    })
-    return res.status(200).json(newUser)
-  } catch (error) {
-    res.status(400).json({ error: error.message })
-  }
+  const { username, password } = req.body
+  //hash and salt
+  const hashedPwd = await bcrypt.hash(password, 10)
+
+  const newUser = await User.create({
+    username,
+    password: hashedPwd,
+  })
+  return res.status(200).json(newUser)
 })
 module.exports = users
