@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const userController = require("./controllers/userController")
 const listingController = require("./controllers/listingController")
+const authController = require("./controllers/authController")
 
 const app = express()
 const PORT = process.env.PORT ?? 3400
@@ -43,6 +44,7 @@ app.use(express.static("./public/index.html"))
 //routes
 app.use("/api/listings", listingController)
 app.use("/api/users", userController)
+app.use("/api/auth", authController)
 
 app.get("/api/", (req, res) => {
   res.json({ message: "connection success!" })
