@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minLength: 8,
   },
+  mobile: {
+    type: String,
+    trim: true,
+    minLength: 8,
+  },
 })
 
 const User = mongoose.model("user", userSchema)

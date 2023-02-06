@@ -24,13 +24,14 @@ users.post("/create", userValidation, async (req, res) => {
     return res.status(400).json({ errors: errors })
   }
 
-  const { username, password } = req.body
+  const { username, password, mobile } = req.body
   //hash and salt
   const hashedPwd = await bcrypt.hash(password, 10)
 
   const newUser = await User.create({
     username,
     password: hashedPwd,
+    mobile,
   })
   return res.status(200).json(newUser)
 })

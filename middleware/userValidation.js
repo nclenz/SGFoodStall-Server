@@ -16,6 +16,8 @@ const userValidation = [
       }
     })
   }),
+
+  body("mobile", "Mobile Number is required").isMobilePhone(["en-SG"]),
 ]
 
 module.exports = userValidation
