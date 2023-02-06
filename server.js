@@ -7,7 +7,7 @@ const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const userController = require("./controllers/userController")
-// const listingController = require("./controllers/listingController")
+const listingController = require("./controllers/listingController")
 
 const app = express()
 const PORT = process.env.PORT ?? 3400
@@ -39,13 +39,8 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.static("./public/index.html"))
 
-// db.once("open", () => {
-//   console.log("Connected to MongoDB")
-//   app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
-// })
-
 //routes
-// app.use("/api/listing", listingController)
+app.use("/api/listings", listingController)
 app.use("/api/users", userController)
 
 app.get("/api/", (req, res) => {
