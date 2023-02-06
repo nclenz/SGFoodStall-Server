@@ -12,6 +12,7 @@ const listingController = require("./controllers/listingController")
 const app = express()
 const PORT = process.env.PORT ?? 3400
 const MONGO_URI = process.env.MONGO_URI
+console.log(MONGO_URI)
 
 //mongoose settings
 mongoose.connect(MONGO_URI)
@@ -20,11 +21,11 @@ mongoose.set("runValidators", true)
 mongoose.set("debug", true)
 
 // check mongodb connection status
+db.on("connected", () => console.log("mongo connected"))
+db.on("disconnected", () => console.log("mongo disconnected"))
 db.on("error", (error) => {
   console.log(error.message + " is Mongo not running?")
 })
-db.on("connected", () => console.log("mongo connected"))
-db.on("disconnected", () => console.log("mongo disconnected"))
 
 //middleware
 app.use(
