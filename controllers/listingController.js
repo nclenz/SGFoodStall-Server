@@ -95,7 +95,7 @@ listings.post(
 listings.get(
   "/all",
   asyncHandler(async (req, res) => {
-    const allListings = await Listing.find().exec()
+    const allListings = await Listing.find().populate("user").exec()
     if (!allListings?.length) {
       res.status(400).json({ msg: "No listings found" })
     }
