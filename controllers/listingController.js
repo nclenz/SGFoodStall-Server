@@ -53,6 +53,7 @@ listings.post("/upload", upload.single("image"), (req, res) => {
 listings.post(
   "/create",
   checkAuth,
+
   upload.single("image"),
 
   asyncHandler(async (req, res) => {
@@ -108,7 +109,7 @@ listings.get(
   asyncHandler(async (req, res) => {
     const { id } = req.params
 
-    const listing = await Listing.findById(id)
+    const listing = await Listing.findById(id).populate("user")
     if (!listing) {
       return res.status(404).json({ msg: "Listing Not Found" })
     }
@@ -119,7 +120,11 @@ listings.get(
 //UPDATE
 listings.put(
   "/edit/:id",
+  checkAuth,
   param("id").isMongoId(),
+  body("rental")
+    .isCurrency({ allow_negatives: false, allow_decimal: true })
+    .withMessage("Price must be a valid currency"),
   asyncHandler(async (req, res) => {
     const { id } = req.params
     const { newListingsInput } = req.body
@@ -136,6 +141,25 @@ listings.put(
     if (updatedListings) {
       res.status(200).json(updatedListings)
     } else return res.status(404).json({ message: "Listing not found" })
+  })
+)
+
+listings.delete(
+  "/delete/:id",
+  param("id").isMongoId(),
+  checkAuth,
+  asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const deleteListing = await Listing.findByIdAndDelete(id)
+
+    if (deleteListing) {
+      return res.status(200).json({
+        msg: `Listing ${deleteListing} deleted`,
+      })
+    } else {
+      return res.status(404).json({ msg: "Task not found" })
+    }
   })
 )
 

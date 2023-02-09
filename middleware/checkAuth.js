@@ -4,7 +4,7 @@ const checkAuth = async (req, res, next) => {
   let authHeader = req.header("Authorization")
 
   if (!authHeader) {
-    return res.status(401).json({ message: "Unauthorized" })
+    return res.status(401).json({ message: "Unauthorized401" })
   }
 
   const token = authHeader.split(" ")[1]
@@ -15,7 +15,7 @@ const checkAuth = async (req, res, next) => {
     req.id = decoded.id
     next()
   } catch (error) {
-    return res.status(403).json({ msg: "Unauthorized" })
+    return res.status(403).json({ msg: "Unauthorized403" })
   }
 }
 module.exports = checkAuth
