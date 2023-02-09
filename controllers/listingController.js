@@ -123,8 +123,8 @@ listings.put(
   checkAuth,
   param("id").isMongoId(),
   body("rental")
-    .isCurrency({ allow_negatives: false, allow_decimal: true })
-    .withMessage("Price must be a valid currency"),
+    .isInt({ gt: 0 })
+    .withMessage("Number must be a positive integer"),
   asyncHandler(async (req, res) => {
     const { id } = req.params
     const { newListingsInput } = req.body
@@ -147,7 +147,7 @@ listings.put(
 listings.delete(
   "/delete/:id",
   param("id").isMongoId(),
-  checkAuth,
+  // checkAuth,
   asyncHandler(async (req, res) => {
     const { id } = req.params
 

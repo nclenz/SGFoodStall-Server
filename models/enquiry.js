@@ -1,25 +1,31 @@
 const mongoose = require("mongoose")
 
-const enquirySchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
-    trim: true,
+const enquirySchema = new mongoose.Schema(
+  {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "listing",
+      required: true,
+      trim: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+    },
+    mobile: {
+      type: String,
+      required: true,
+    },
+    msg: {
+      type: String,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 8,
-  },
-  mobile: {
-    type: String,
-    trim: true,
-    required: true,
-    minLength: 8,
-  },
-})
+  { timestamps: true }
+)
 
-const User = mongoose.model("user", enquirySchema)
-module.exports = User
+const Enquiry = mongoose.model("enquiry", enquirySchema)
+module.exports = Enquiry
