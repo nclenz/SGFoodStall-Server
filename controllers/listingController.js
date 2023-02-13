@@ -53,7 +53,6 @@ listings.post("/upload", upload.single("image"), (req, res) => {
 listings.post(
   "/create",
   checkAuth,
-
   upload.single("image"),
 
   asyncHandler(async (req, res) => {
