@@ -105,7 +105,7 @@ listings.get(
 )
 
 listings.get(
-  "/:id",
+  "/listing/:id",
   asyncHandler(async (req, res) => {
     const { id } = req.params
 
@@ -120,26 +120,25 @@ listings.get(
 //UPDATE
 listings.put(
   "/edit/:id",
-  checkAuth,
   param("id").isMongoId(),
   body("rental")
     .isInt({ gt: 0 })
     .withMessage("Number must be a positive integer"),
   asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { newListingsInput } = req.body
+    const newListingsInput = req.body
 
     const updatedListings = await Listing.findByIdAndUpdate(
       id,
       {
-        newListingsInput,
+        $set: newListingsInput,
       },
       {
         new: true,
       }
     ).exec()
     if (updatedListings) {
-      res.status(200).json(updatedListings)
+      return res.status(200).json(updatedListings)
     } else return res.status(404).json({ message: "Listing not found" })
   })
 )

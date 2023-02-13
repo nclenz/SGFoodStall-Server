@@ -50,8 +50,10 @@ auth.get(
   asyncHandler(async (req, res) => {
     const user = await User.findOne({ username: req.username })
     return res.status(200).json({
-      username: user.username,
-      id: user._id,
+      data: {
+        username: user.username,
+        id: user._id,
+      },
     })
   })
 )
