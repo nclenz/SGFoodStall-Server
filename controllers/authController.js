@@ -4,12 +4,12 @@ const auth = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("express-async-handler")
-// const loginLimiter = require("../middleware/loginLimiter")
+const loginLimiter = require("../middleware/loginLimiter")
 const checkAuth = require("../middleware/checkAuth")
 
 auth.post(
   "/login",
-  //   loginLimiter,
+  loginLimiter,
   asyncHandler(async (req, res) => {
     const { username, password } = req.body
 

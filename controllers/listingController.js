@@ -145,7 +145,7 @@ listings.put(
 listings.delete(
   "/delete/:id",
   param("id").isMongoId(),
-  // checkAuth,
+  checkAuth,
   asyncHandler(async (req, res) => {
     const { id } = req.params
 
