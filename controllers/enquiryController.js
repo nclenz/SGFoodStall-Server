@@ -2,13 +2,26 @@ const express = require("express")
 const Enquiry = require("../models/enquiry")
 const asyncHandler = require("express-async-handler")
 const enquiry = express.Router()
-const { param } = require("express-validator")
+const { body, param, validationResult } = require("express-validator")
 
 enquiry.post(
   "/send",
+  [body("mobile", "Mobile Number is required").isMobilePhone("en-SG")],
   asyncHandler(async (req, res) => {
-    const msg = req.body
-    const enquiryForm = await Enquiry.create(msg)
+    const { id, name, email, mobile, msg, status, remarks } = req.body
+    const enquiryForm = await Enquiry.create({
+      id,
+      name,
+      email,
+      mobile,
+      msg,
+      status,
+      remarks,
+    })
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
     if (enquiryForm) {
       return res.status(201).json(enquiryForm)
     } else {
