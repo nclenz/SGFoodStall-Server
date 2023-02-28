@@ -15,7 +15,7 @@ const checkAuth = async (req, res, next) => {
     req.id = decoded.id
     next()
   } catch (error) {
-    return res.status(403).json({ msg: "Unauthorized" })
+    return res.status(403).json({ msg: "Unauthorized403" })
   }
 }
 module.exports = checkAuth
